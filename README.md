@@ -28,7 +28,7 @@ efetch-parallel -h # If this works, it means it has correctly been placed in you
 # Test Run 
 ```bash
 efetch-parallel -h
-entrez-parallel test/accessions.list.10 test.out.faa 90000 4 protein fasta
+efetch-parallel test/accessions.list.10 test.out.faa 90000 4 protein fasta
 ```
 
 # Curating list of IDs 
