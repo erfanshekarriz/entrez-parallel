@@ -1,0 +1,22 @@
+name: entrez-direct
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1=conda_forge
+  - _openmp_mutex=4.5=2_gnu
+  - ca-certificates=2023.11.17=hbcca054_0
+  - entrez-direct=16.2=he881be0_1
+  - gettext=0.21.1=h27087fc_0
+  - libgcc-ng=13.2.0=h807b86a_3
+  - libgomp=13.2.0=h807b86a_3
+  - libidn2=2.3.4=h166bdaf_0
+  - libnsl=2.0.1=hd590300_0
+  - libunistring=0.9.10=h7f98852_0
+  - libzlib=1.2.13=hd590300_5
+  - openssl=3.2.0=hd590300_1
+  - parallel=20231122=ha770c72_0
+  - perl=5.32.1=4_hd590300_perl5
+  - wget=1.20.3=ha35d2d1_1
+  - zlib=1.2.13=hd590300_5

@@ -1,0 +1,82 @@
+#!/bin/bash
+
+if [ "$#" -ne 6 ]; then
+	echo -e "\nUsage: $0 \nWarning: Inputs must be in this exact order. This command only works for efetch \n\n1)[INPUT] input file in csv with accesions in first column  or list of accessions\n2)[OUTPUT] output file handle \n3)[MAX_BATCH_SIZE] The maximum number of sequences to retrieve per job (max tested=90000) \n4)[N_CPU] Number of cpus to use \n5)[DATABASE] ncbi database to search (efetch -h for options)\n6)[OUT-FORMAT] The format output dependent on database (efetch -h for options)\n\nNew options are being made for the newer version!\nThe current code only runs efetch -id ${ids} -db ${db} -format ${frmt} and automates parallelization by splitting inputs\n"
+	exit 1
+fi
+
+input_file="$1"
+output_file="$2"
+max_batch_size="$3"
+n_cpus="$4"
+db="$5"
+frmt="$6"
+tmpdir="tmp"
+
+if [ -e "$output_file" ]; then
+	echo "Output file '$output_file' already exists. Cannot overwrite."
+	exit 1
+fi
+
+total_lines=$(wc -l < "$input_file")
+batch_size=$((total_lines / n_cpus))
+if ((batch_size > max_batch_size)); then
+	batch_size=$max_batch_size
+fi
+
+num_batches=$((total_lines / batch_size))
+if ((total_lines % batch_size != 0)); then
+	  num_batches=$((num_batches + 1))
+  fi
+
+echo "Processing $total_lines sequences with $n_cpus CPUs..."
+echo "The files will be downloaded in $num_batches batches..."
+echo "Number of sequences per run: $batch_size"
+
+download_batch() {
+	start_line=$1
+	end_line=$2
+	batch_no=$3
+	input_file=$4
+	db=$5
+	frmt=$6
+	tmpdir=$7
+	
+	echo "Processing batch #$3 ..."
+	echo -e "Downloading sequences $start_line-$end_line \n"
+	
+	ids=$(cut -f1 -d "," ${input_file} | sed -n "${start_line},${end_line}p")
+	efetch -id ${ids} -db ${db} -format ${frmt} > ${tmpdir}/${batch_no}.tmp
+
+
+}
+
+
+export -f download_batch
+
+# make a tmp directory to store all parallel tasks 
+if [ ! -d "$tmpdir" ]; then
+        mkdir "$tmpdir"
+        echo -e "A $tmpdir directory has been created.\n"
+else
+	{
+		rmdir $tmpdir
+		mkdir "$tmpdir"
+		echo -e "A $tmpdir directory has been created.\n"
+	} || {
+	echo "Directory $tmpdir already exists and is not empty. Cannot overwite."
+        exit 1
+}
+fi
+
+
+# Run parallel job
+starts=$(seq 1 $batch_size $total_lines)
+ends=$(seq $batch_size $batch_size $total_lines && echo $total_lines)
+batchno=$(seq $num_batches)
+parallel --link --jobs $4 --delay 0 download_batch {1} {2} {3} {4} {5} {6} {7} ::: $starts ::: $ends ::: $batchno ::: "$input_file" ::: "$db" ::: "$frmt" ::: "$tmpdir"
+
+# Concatenate all parallel job .faa outputs into one final output
+echo "All files done! Merging files into $output_file"
+cat ${tmpdir}/*.tmp > $output_file
+echo "Done!"
