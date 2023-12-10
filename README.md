@@ -8,7 +8,7 @@ A parrallelized version of entrez-direct functions that uses GNU parallel.
 3) Give permissions to the bash script 
 4) Copy scripts to your conda bin so you can execute it anywhere as long as you have conda acitvated
 5) Validate usage
-```
+```bash
 git clone https://github.com/erfanshekarriz/entrez-parallel.git
 cd entrez-parallel
 
@@ -26,7 +26,7 @@ efetch-parallel -h # If this works, it means it has correctly been placed in you
 ```
 
 # Test Run 
-```
+```bash
 efetch-parallel -h
 entrez-parallel test/accessions.list.10 test.out.faa 90000 4 protein fasta
 ```
