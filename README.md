@@ -39,15 +39,29 @@ efetch-parallel test/accessions.list.10 test.out.faa protein fasta 90000 4
 # Curating list of IDs with id2taxonomy-parallel
 ```bash
 # 1) Retrieve all protein IDs associated with Crevaviridae from Refseq database [crAssphage Refseq proteins].
+
 esearch -db protein -query '"Crevaviridae"[Organism] AND refseq[filter]' | efetch -format acc > crevaviridaeRefseq.acc
-# 2) Search the accession list and retrieve taxonomy association with the protein 
+
+# 2) Search the accession list and retrieve taxonomy association with the protein
+
 id2taxonmy-parallel crevaviridaeRefseq.acc crevaviridaeRefseq_taxid.tsv protein 90000 4
+
 # 3) Download the associated fasta files using efetch-parallel
+
 efetch-parallel crevaviridaeRefseq.acc crevaviridaeRefseq.faa protein fasta 90000 4
 
 # 4) (Optional) Get the full lineage of the taxID with taxonkit
 # This makes it easy to use the sequences for taxonomic identification later!
-cut -f2 crevaviridaeRefseq_taxid.tsv | taxonkit lineage --threads 4 > crevaviridaeRefseq_lineage.csv
+
+# download taxonkit database
+wget ftp://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz
+mkdir -p ~/.taxonkit
+tar -xzf taxdump.tar.gz
+mv taxdump/* ~/.taxonkit/
+rm -r taxdump*
+
+# this makes everything into a nice 8 level taxonomic table (without headers)
+cut -f2 crevaviridaeRefseq_taxid.tsv | taxonkit lineage -r -L --threads 4 | taxonkit reformat -I 1 -F -S -f "{k}\t{p}\t{c}\t{o}\t{f}\t{g}\t{s}\t{t}" > crevaviridaeRefseq_lineage.csv
 ```
 
 # Small Issues
