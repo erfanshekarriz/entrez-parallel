@@ -70,11 +70,11 @@ mv taxdump/* ~/.taxonkit/
 rm -r taxdump*
 
 #  makes everything into a nice 8-level taxonomic table (without headers)
-echo "taxID,rank,kingdom,phylum,class,order,family,genus,species,strain" > crevaviridaeRefseq_lineage.csv
+echo -e "taxID\trank\tkingdom\tphylum\tclass\torder\tfamily\tgenus\tspecies\tstrain" > crevaviridaeRefseq_lineage.tsv
 cut -f2 crevaviridaeRefseq_taxid.tsv \
 | taxonkit lineage -r -L --threads 4 \
 | taxonkit reformat -I 1 -F -S \
--f "{k}\t{p}\t{c}\t{o}\t{f}\t{g}\t{s}\t{t}" >> crevaviridaeRefseq_lineage.csv
+-f "{k}\t{p}\t{c}\t{o}\t{f}\t{g}\t{s}\t{t}" >> crevaviridaeRefseq_lineage.tsv
 ```
 
 # Small Issues
