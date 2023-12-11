@@ -1,33 +1,29 @@
 #!/bin/bash
 
-if [ "$#" -ne 6 ]; then
+if [ "$#" -ne 5 ]; then
 	echo -e "
-	[efetch-parallel] Provide a list of prot/nuc/etc accession IDs and download them into desired format parallelized linearly by CPUs
+	Usage: [id2taxonomy-parallel] Provide a list of prot/nuc accession IDs and get a summary of the taxID associations
 
-	efetch-parallel [INPUT] [OUTPUT] [DATABASE] [OUTFORMAT] [MAX_BATCH_SIZE max=90,000] [N_CPU]
+	id2taxonomy-parallel [INPUT] [OUTPUT] [DATABASE] [MAX_BATCH_SIZEi max=90,000] [N_CPU]
 
-	Warning: Inputs must be in this exact order. This command only works for efetch 
+	Warning: Inputs must be in this exact order.
 
 	1)[INPUT] input file in csv with accesions in first column  or list of accessions
 	2)[OUTPUT] output file handle
 	3)[DATABASE] ncbi database to search (efetch -h for options)
-	4)[OUTFORMAT] The format output dependent on database (efetch -h for options)
-	5)[MAX_BATCH_SIZE] The maximum number of sequences to retrieve per job (max tested=90000)
-	6)[N_CPU] Number of cpus to use
+	4)[MAX_BATCH_SIZE] The maximum number of sequences to retrieve per job (max tested=90000)
+	5)[N_CPU] Number of cpus to use
 
 	New options are being made for the newer version!
-	
 	"
-
 	exit 1
 fi
 
 input_file="$1"
 output_file="$2"
-max_batch_size="$5"
-n_cpus="$6"
+n_cpus="$5"
 db="$3"
-frmt="$4"
+max_batch_size="$4"
 tmpdir="tmp"
 
 if [ -e "$output_file" ]; then
@@ -37,7 +33,8 @@ fi
 
 total_lines=$(wc -l < "$input_file")
 batch_size=$((total_lines / n_cpus))
-if ((batch_size > max_batch_size)); then batch_size=$max_batch_size
+if ((batch_size > max_batch_size)); then
+	batch_size=$max_batch_size
 fi
 
 num_batches=$((total_lines / batch_size))
@@ -55,14 +52,13 @@ download_batch() {
 	batch_no=$3
 	input_file=$4
 	db=$5
-	frmt=$6
-	tmpdir=$7
+	tmpdir=$6
 	
 	echo "Processing batch #$3 ..."
 	echo -e "Downloading sequences $start_line-$end_line \n"
 	
 	ids=$(cut -f1 -d "," ${input_file} | sed -n "${start_line},${end_line}p")
-	efetch -id ${ids} -db ${db} -format ${frmt} > ${tmpdir}/${batch_no}.tmp
+	esummary -id ${ids} -db ${db} | xtract -pattern DocumentSummary -element Caption,TaxId > ${tmpdir}/${batch_no}.tmp
 
 
 }
@@ -90,7 +86,7 @@ fi
 starts=$(seq 1 $batch_size $total_lines)
 ends=$(seq $batch_size $batch_size $total_lines && echo $total_lines)
 batchno=$(seq $num_batches)
-parallel --link --jobs ${n_cpus} download_batch {1} {2} {3} {4} {5} {6} {7} ::: $starts ::: $ends ::: $batchno ::: "$input_file" ::: "$db" ::: "$frmt" ::: "$tmpdir"
+parallel --link --jobs ${n_cpus} download_batch {1} {2} {3} {4} {5} {6} ::: $starts ::: $ends ::: $batchno ::: "$input_file" ::: "$db" ::: "$tmpdir"
 
 # Concatenate all parallel job .faa outputs into one final output
 echo "All files done! Merging files into $output_file"
