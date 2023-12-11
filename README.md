@@ -44,7 +44,7 @@ esearch \
 -query '"Crevaviridae"[Organism] AND refseq[filter]' \
 | efetch -format acc > crevaviridaeRefseq.acc
 
-# 2) Search the accession list and retrieve taxonomy association with the protein
+# 2) Search the accession list and retrieve NCBI taxonomy IDs association with each sequence
 id2taxonmy-parallel \
 crevaviridaeRefseq.acc \
 crevaviridaeRefseq_taxid.tsv \
