@@ -3,8 +3,8 @@ A parallelized version of Entrez-direct functions built with GNU parallel. Incre
 
 Currently hosting two functions:
 ```bash
-efetch-parallel - From a list of ids download fasta files or in any other format from any database with parallelization  
-id2taxonomy-parallel - From a list of sequence ids get the associated taxonomy with parallelization
+efetch-parallel # From a list of ids download associated NCBI fasta files with parallelization [or other chosen output formats]
+id2taxonomy-parallel # From a list of sequence ids get the associated taxonomy with parallelization
 ```
 
 # Set-up 
