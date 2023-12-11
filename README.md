@@ -81,5 +81,5 @@ cut -f2 crevaviridaeRefseq_taxid.tsv \
 Currently, the efetch-parallel gives errors on sequences it can't find. I will update the package later to be able to provide a list of IDs it is giving errors on so you can manually inspect. Also, remember that entrez-parallel parallelization is achieved through GNU parallel and hence has only been tested on Linux platforms. 
 
 # Bug Reports
-If you run into any problem using the package or run into any problems, please email me at eshekar@connect.hku.hk or submit an issue to the Issues tab [recommended]
+If you run into any problem using the package or run into any problems, please email me at eshekar@connect.hku.hk or submit an issue to the GitHub [issues](https://github.com/erfanshekarriz/entrez-parallel/issues) tab [recommended]
 
