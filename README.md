@@ -35,8 +35,8 @@ efetch-parallel test/accessions.list.10 test.out.faa 90000 4 protein fasta
 If you'd like to get your own custom list, you can easily do so via NCBI's entrez-direct using esearch or other utilities. You can find the documentation https://www.ncbi.nlm.nih.gov/books/NBK179288/
 
 # Small Issues
-Currently the efetch-parallel gives errors on sequences it can't find. I will update the package later to be able to provide a list of ids it is giving errors on so you can manually inspect. Also barein mind that this is run on GNU parallel and has only been tested on Linux platforms. 
+Currently, the efetch-parallel gives errors on sequences it can't find. I will update the package later to be able to provide a list of IDs it is giving errors on so you can manually inspect. Also, remember that entrez-parallel parallelization is achieved through GNU parallel and hence has only been tested on Linux platforms. 
 
 # Bug Reports
-If you run into any problem using the package or run into any problems, please email me eshekar@connect.hku.hk or submit an issue to the Issues tab [recommended]
+If you run into any problem using the package or run into any problems, please email me at eshekar@connect.hku.hk or submit an issue to the Issues tab [recommended]
 
