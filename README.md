@@ -1,6 +1,11 @@
 # entrez-parallel
-A parrallelized version of entrez-direct functions that uses GNU parallel. 
+A parallelized version of Entrez-direct functions that use GNU parallel. Incredibly speed up your workflows! New integration with taxonkit!
 
+Currently hosting two functions:
+```bash
+efetch-parallel - From a list of ids download fasta files or in any other format from any database with parallelization  
+id2taxonomy-parallel - From a list of sequence ids get the associated taxonomy with parallelization
+```
 
 # Set-up 
 1) Clone this repository
@@ -28,11 +33,22 @@ efetch-parallel -h # If this works, it means it has correctly been placed in you
 # Test Run 
 ```bash
 efetch-parallel -h
-efetch-parallel test/accessions.list.10 test.out.faa 90000 4 protein fasta
+efetch-parallel test/accessions.list.10 test.out.faa protein fasta 90000 4
 ```
 
-# Curating list of IDs 
-If you'd like to get your own custom list, you can easily do so via NCBI's entrez-direct using esearch or other utilities. You can find the documentation https://www.ncbi.nlm.nih.gov/books/NBK179288/
+# Curating list of IDs with id2taxonomy-parallel
+```bash
+# 1) Retrieve all protein IDs associated with Crevaviridae from Refseq database [crAssphage Refseq proteins].
+esearch -db protein -query '"Crevaviridae"[Organism] AND refseq[filter]' | efetch -format acc > crevaviridaeRefseq.acc
+# 2) Search the accession list and retrieve taxonomy association with the protein 
+id2taxonmy-parallel crevaviridaeRefseq.acc crevaviridaeRefseq_taxid.tsv protein 90000 4
+# 3) Download the associated fasta files using efetch-parallel
+efetch-parallel crevaviridaeRefseq.acc crevaviridaeRefseq.faa protein fasta 90000 4
+
+# 4) (Optional) Get the full lineage of the taxID with taxonkit
+# This makes it easy to use the sequences for taxonomic identification later!
+cut -f2 crevaviridaeRefseq_taxid.tsv | taxonkit lineage --threads 4 > crevaviridaeRefseq_lineage.csv
+```
 
 # Small Issues
 Currently, the efetch-parallel gives errors on sequences it can't find. I will update the package later to be able to provide a list of IDs it is giving errors on so you can manually inspect. Also, remember that entrez-parallel parallelization is achieved through GNU parallel and hence has only been tested on Linux platforms. 
