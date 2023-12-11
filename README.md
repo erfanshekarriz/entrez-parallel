@@ -1,5 +1,5 @@
 # entrez-parallel
-A parallelized version of Entrez-direct functions that use GNU parallel. Incredibly speed up your workflows! New integration with taxonkit!
+A parallelized version of Entrez-direct functions built with GNU parallel. Incredibly speed up your workflows! New integration with taxonkit!
 
 Currently hosting two functions:
 ```bash
