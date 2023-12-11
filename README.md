@@ -36,7 +36,7 @@ efetch-parallel -h
 efetch-parallel test/accessions.list.10 test.out.faa protein fasta 90000 4
 ```
 
-# Curating list of IDs with id2taxonomy-parallel
+# Tutorial (Curating crAssphage RefSeq Protein Database) 
 ```bash
 # 1) Retrieve all protein IDs associated with Crevaviridae from Refseq database [crAssphage Refseq proteins].
 esearch \
