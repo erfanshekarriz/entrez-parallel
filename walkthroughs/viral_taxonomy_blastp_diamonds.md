@@ -13,6 +13,7 @@ esearch -db protein -query 'viruses[orgn]'
 ```
 To download the accession ids simply run: 
 ```bash
+# i have not parallelized this function yet, so this will take 12+ hours. working on a parallelized version of this command.
 esearch \
 -db protein \
 -query 'viruses[orgn]' \
