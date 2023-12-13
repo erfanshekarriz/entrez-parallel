@@ -13,6 +13,7 @@ esearch -db protein -query 'viruses[orgn]'
 ```
 To download the accession ids simply run: 
 ```bash
+# i have not parallelized this function yet, so this will take 12+ hours. working on a parallelized version of this command.
 esearch \
 -db protein \
 -query 'viruses[orgn]' \
@@ -22,7 +23,7 @@ esearch \
 Then you'd want to run efetch-parallel and id2taxonomy-parallel to download the associated ids and fasta files:
 ```
 # download taxonomy IDs with 4 cores
-id2taxonmy-parallel \
+id2taxonomy-parallel \
 ncbiVirusGeneBankprot.acc \
 ncbiVirusGeneBankprot.taxid.tsv \
 protein \
