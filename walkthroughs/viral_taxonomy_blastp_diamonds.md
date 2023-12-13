@@ -23,7 +23,7 @@ esearch \
 Then you'd want to run efetch-parallel and id2taxonomy-parallel to download the associated ids and fasta files:
 ```
 # download taxonomy IDs with 4 cores
-id2taxonmy-parallel \
+id2taxonomy-parallel \
 ncbiVirusGeneBankprot.acc \
 ncbiVirusGeneBankprot.taxid.tsv \
 protein \
