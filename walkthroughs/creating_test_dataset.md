@@ -46,6 +46,15 @@ cut -f2 testData.taxid.tsv \
 
 # The code above makes everything into a nice 8-rank classic taxonomic annotation group
 ```
+Take a look at the taxonomic distribution:
+```bash
+# Kingdom
+cut -f3 testData.lineage.tsv | sort | uniq -c | sort -nr
+# Phylum 
+cut -f4 testData.lineage.tsv | sort | uniq -c | sort -nr
+# Class
+cut -f5 testData.lineage.tsv | sort | uniq -c | sort -nr
+```
 Download the fasta for the viral and bacterial sequences using efetch-parallel
 ```
 # download fasta files with 4 cores 
