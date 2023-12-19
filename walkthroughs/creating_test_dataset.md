@@ -3,12 +3,12 @@ This tutorial was built to test a new viral contig identification and taxonomic 
 we must retrieve sequences that were submitted to the Genbank AFTER its training to avoid any specific biases. The geNomad paper states that the data was retrieved on 6th July 2021. 
 ___
 ### 1) Download NCBI Genebank Viral 
-Search any accession IDs relating to viruses that were submitted AFTER 6th July 2021 (7th July - Present) and bacterial RefSeq submitted after 6th July 2023:
+Search any accession IDs relating to viruses that were submitted AFTER 6th July 2021 (7th July - Present) and bacterial RefSeq submitted after 15th Dec 2023:
 ```bash
-# Viruses Genebank 2021-07-07 - Present
-esearch -db nucleotide -query '("viruses"[porgn:__txid10239]) AND (Viruses[Organism]) AND ("2021/7/7"[Publication Date] : "3000"[Publication Date])'
-# Bacteria RefSeq 2023-07-07 - Present
-esearch -db nucleotide -query '("2023/07/07"[PDAT] : "3000/12/31"[PDAT]) AND (bacteria[filter] AND biomol_genomic[PROP] AND refseq[filter])'
+# Viruses Refseq 2021-07-07 - Present (n=4,109)
+esearch -db nucleotide -query '("2021/7/7"[PDAT] : "3000"[PDAT]) AND viruses[filter] AND refseq[filter] AND ("Viruses"[Organism])'
+# Bacteria RefSeq 2023-07-07 - Present (n=13,362)
+esearch -db nucleotide -query '("2023/12/15"[PDAT] : "3000"[PDAT]) AND (bacteria[filter] AND biomol_genomic[PROP] AND refseq[filter])'
 # We use a smaller bacterial submission window and only RefSeq sequences
 # to roughly balance the dataset to reduce computation time
 ```
@@ -16,12 +16,12 @@ Download the accession IDs using efetch:
 ```bash
 esearch \
 -db nucleotide \
--query '("viruses"[porgn:__txid10239]) AND (Viruses[Organism]) AND ("2021/7/7"[Publication Date] : "3000"[Publication Date])' \
+-query '("2021/7/7"[PDAT] : "3000"[PDAT]) AND viruses[filter] AND refseq[filter] AND ("Viruses"[Organism])' \
 | efetch -format acc > testData.acc
 
 esearch \
 -db nucleotide \
--query '("2023/07/07"[PDAT] : "3000/12/31"[PDAT]) AND (bacteria[filter] AND biomol_genomic[PROP] AND refseq[filter])' \
+-query '("2023/12/15"[PDAT] : "3000"[PDAT]) AND (bacteria[filter] AND biomol_genomic[PROP] AND refseq[filter])' \
 | efetch -format acc >> testData.acc
 
 ```
