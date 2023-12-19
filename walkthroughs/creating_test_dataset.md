@@ -70,6 +70,11 @@ fasta \
 # Remember that entrez-parallel commands scale LINEARLY.
 # If you have 64 cores take advantage of all of them!
 # It will make your task 64 times faster!
+
+# remove duplicates with seqkit
+seqkit rmdup -n testData.fna > tmp.fna
+mv tmp.fna testData.fna
+
 ```
 ___
 ### 2) Fragment the sequences randomly into different sizes to represent contigs 
