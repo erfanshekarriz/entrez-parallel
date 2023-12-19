@@ -7,8 +7,8 @@ Search any accession IDs relating to viruses that were submitted AFTER 6th July 
 ```bash
 # Viruses Refseq 2021-07-07 - Present (n=4,109)
 esearch -db nucleotide -query '("2021/7/7"[PDAT] : "3000"[PDAT]) AND viruses[filter] AND refseq[filter] AND ("Viruses"[Organism])'
-# Bacteria RefSeq 2023-07-07 - Present (n=13,362)
-esearch -db nucleotide -query '("2023/12/15"[PDAT] : "3000"[PDAT]) AND (bacteria[filter] AND biomol_genomic[PROP] AND refseq[filter])'
+# Bacteria Genomes 2021-07-07 - Present (n=3,913)
+esearch -db genome -query '"Bacteria"[Organism] AND ("2021/7/7"[CreateDate] : "3000"[CreateDate])'
 # We use a smaller bacterial submission window and only RefSeq sequences
 # to roughly balance the dataset to reduce computation time
 ```
@@ -20,20 +20,21 @@ esearch \
 | efetch -format acc > testData.acc
 
 esearch \
--db nucleotide \
--query '("2023/12/15"[PDAT] : "3000"[PDAT]) AND (bacteria[filter] AND biomol_genomic[PROP] AND refseq[filter])' \
+-db genome \
+-query '"Bacteria"[Organism] AND ("2021/7/7"[CreateDate] : "3000"[CreateDate])' \
+| elink -target nucleotide \
 | efetch -format acc >> testData.acc
 
 ```
 Download the sequences using efetch-parallel and id2taxonomy-parallel:
 ```bash
-# download taxonomy IDs with 64 cores
+# download taxonomy IDs with 4 cores
 id2taxonomy-parallel \
 testData.acc \
 testData.taxid.tsv \
 nucleotide \
 90000 \
-64
+4
 ```
 Get taxonomy lineage with [taxonkit](https://bioinf.shenwei.me/taxonkit/). Make sure you have [properly installed the database](https://github.com/erfanshekarriz/entrez-parallel)
 ```
@@ -64,7 +65,7 @@ testData.fna \
 nucleotide \
 fasta \
 90000 \
-64
+4
 
 # Remember that entrez-parallel commands scale LINEARLY.
 # If you have 64 cores take advantage of all of them!
